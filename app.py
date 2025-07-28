@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as htmlviewer
+st.set_page_config(layout='wide', page_title="Hubble's classification of galaxies")
 
 # Title Msg#1
 st.title('This is Haemin Webapp!!')
@@ -40,5 +41,6 @@ with col1:
 with col2:
     with st.expander('Tips..'):
         st.info('Tips..')
+
 st.markdown('<hr>', unsafe_allow_html=True)
 st.write('<font color="BLUE">(c)copyright. all rights reserved by Haemin', unsafe_allow_html=True)
