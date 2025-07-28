@@ -33,10 +33,12 @@ with col1:
         #st.write(html, unsafe_allow_html=True)
         htmlviewer.html(html, height=1000)
 
-
+    with st.expander('Content #3...'):
+        #st.write(html, unsafe_allow_html=True)
+        htmlviewer.html(html, height=1000)
 
 with col2:
     with st.expander('Tips..'):
         st.info('Tips..')
 st.markdown('<hr>', unsafe_allow_html=True)
-st.write('<font color="BLUE">(c)copyright. all rights reserved by skykang', unsafe_allow_html=True)
+st.write('<font color="BLUE">(c)copyright. all rights reserved by Haemin', unsafe_allow_html=True)
