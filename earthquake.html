@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>진앙의 위치 결정하기</title>
+  <style>
+    body { font-family: sans-serif; margin: 30px; }
+    h1 { text-align: center; }
+    .left-align { text-align: left; margin-top: 20px; }
+    .boxed-question { border: 1px solid #aaa; padding: 15px; margin-top: 20px; }
+    .hidden { display: none; }
+    .img-box { margin-top: 10px; }
+    select, button { font-size: 14px; }
+    .result { font-weight: bold; color: blue; margin-top: 10px; }
+
+    /* 수정된 타이머 스타일 */
+    .timer-inline {
+      display: inline-block;
+      font-size: 18px;
+      color: red;
+      font-weight: bold;
+      margin-left: 15px;
+    }
+
+    .btn-timer-wrapper {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>진앙의 위치 결정하기</h1>
+  <div class="left-align">
+    <h3>대상 및 교과:</h3>
+    <p>고등학생 지구과학2</p>
+
+    <h4>지문</h4> 
+    <p> <img src="./images/beaver earthquake.jpg" width="250" height="250" style="vertical-align: middle;"> </p>
+    <p>어느 날 발생한 지진의 정확한 위치를 찾기 위해 지질학자 비버는 같은 지진으로부터 발생한 세 관측소의 지진파 기록을 얻었다.</p>
+    <p>지진의 발생 위치(진앙)을 파악할 수 있는 정보는 다음과 같다.</p>
+    
+    <h4>정보</h4>
+    <ul>
+      <li>가) P파와 S파가 관측소에 도달한 시각의 차이를 &lt;PS시&gt;라고 한다.</li>
+      <li>나) &lt;PS시&gt;를 통해 진앙까지의 거리를 계산할 수 있다.</li>
+      <li>다) 여러 관측소로부터 진앙까지의 거리를 반지름으로 하는 원을 그린 후 서로 다른 두 원의 교점이 진앙이다.</li>
+    </ul>
+
+    <h4>보기:</h4>
+    <div class="img-box">
+      <img src="./images/earthquake graph.jpg" alt="지진파 기록 및 관측소 위치 이미지" width="600">
+    </div>
+
+    <h4>문제 풀이 시간 선택:</h4>
+    <select id="timeSelect">
+      <option value="60">1분</option>
+      <option value="90">1분 30초</option>
+      <option value="120">2분</option>
+    </select>
+    <button onclick="startQuiz()">문제 풀기</button>
+
+    <div id="quizSection" class="boxed-question hidden">
+      <p>1) A의 지진기록을 얻은 관측소는 ● 이다.
+        <select id="q1">
+          <option>선택</option>
+          <option>참</option>
+          <option>거짓</option>
+        </select>
+      </p>
+      <p>2) 진앙은 우리나라의 제주도 근처에서 발생되었다.
+        <select id="q2">
+          <option>선택</option>
+          <option>참</option>
+          <option>거짓</option>
+        </select>
+      </p>
+      <p>3) C 관측소보다 더 멀리 있는 관측소에서는 &lt;PS시&gt;가 더 길게 측정된다.
+        <select id="q3">
+          <option>선택</option>
+          <option>참</option>
+          <option>거짓</option>
+        </select>
+      </p>
+      <p>4) 두 개의 관측소에서 측정한 지진기록만으로도 진앙의 위치를 결정할 수 있다.
+        <select id="q4">
+          <option>선택</option>
+          <option>참</option>
+          <option>거짓</option>
+        </select>
+      </p>
+
+      <!-- 답안 제출 버튼 + 타이머 -->
+      <div class="btn-timer-wrapper">
+        <button onclick="gradeQuiz()">답안 제출하기</button>
+        <span class="timer-inline hidden" id="timerBox">남은 시간: <span id="time">0</span>초</span>
+      </div>
+
+      <p id="resultMsg" class="result"></p>
+      <button id="retryBtn" class="hidden" onclick="retryQuiz()">다시 풀기</button>
+    </div>
+  </div>
+
+  <script>
+    let countdown;
+    function startQuiz() {
+      const time = parseInt(document.getElementById("timeSelect").value);
+      document.getElementById("quizSection").classList.remove("hidden");
+      document.getElementById("timerBox").classList.remove("hidden");
+      document.getElementById("retryBtn").classList.add("hidden");
+      document.getElementById("resultMsg").innerText = "";
+
+      let currentTime = time;
+      document.getElementById("time").innerText = currentTime;
+      countdown = setInterval(() => {
+        currentTime--;
+        document.getElementById("time").innerText = currentTime;
+        if (currentTime <= 0) {
+          clearInterval(countdown);
+          alert("시간이 종료되었습니다!");
+          if (confirm("다시 도전하시겠습니까?")) {
+            location.reload();
+          }
+        }
+      }, 1000);
+    }
+
+    function gradeQuiz() {
+      clearInterval(countdown);
+      const answers = {
+        q1: "참",
+        q2: "거짓",
+        q3: "참",
+        q4: "거짓"
+      };
+
+      let score = 0;
+      for (let i = 1; i <= 4; i++) {
+        const userAnswer = document.getElementById(`q${i}`).value;
+        if (userAnswer === answers[`q${i}`]) {
+          score++;
+        }
+      }
+
+      document.getElementById("resultMsg").innerText = `총 ${score}문제 정답! (${score}/4)`;
+
+      if (score < 4) {
+        document.getElementById("retryBtn").classList.remove("hidden");
+      }
+    }
+
+    function retryQuiz() {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`q${i}`).value = "선택";
+      }
+      document.getElementById("resultMsg").innerText = "";
+      document.getElementById("retryBtn").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

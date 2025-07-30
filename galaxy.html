@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>외부은하 분류하기</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    .section {
+        margin-bottom: 20px;
+    }
+    .box {
+        border: 2px solid #333;
+        padding: 15px;
+        background-color: #f9f9f9;
+        margin-top: 10px;
+    }
+    img {
+        margin: 5px;
+        max-width: 100%;
+        height: auto;
+    }
+    .controls {
+        margin: 15px 0;
+    }
+    select, input {
+        margin-top: 5px;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .timer {
+        font-size: 18px;
+        color: #d9534f;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    #quizSection {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<h1>외부은하 분류하기</h1>
+
+<div class="section">
+    <h3>대상 및 교과:</h3>
+    <p>고등학생 지구과학1</p>
+</div>
+
+<div class="section">
+    <h3>지문:</h3>
+    <p>평생을 망원경으로 외부 은하를 관측하던 과학자 비버는 은하들을 형태에 따라 분류하고, 새로운 은하도 쉽게 분류할 수 있는 기준(흐름도)을 만들었습니다.</p>
+</div>
+
+<div class="section">
+    <h3>자료(과학자 비버가 찍은 외부 은하들의 사진):</h3>
+    <div>
+        <img src="./images/galaxy example.jpg" alt="은하 사진">
+    </div>
+</div>
+
+<div class="section">
+    <h3>기준(형태에 따른 외부 은하의 분류 기준):</h3>
+    <div class="box">
+        <p>1) 형태가 규칙적인가?</p>
+        <p>2) 나선팔이 있는가?</p>
+        <p>3) 중심부에 막대 구조가 있는가?</p>
+    </div>
+</div>
+
+<div class="section">
+    <h3>결과(외부 은하 분류 흐름도):</h3>
+    <p>흐름도는 (가), (나), (다)에 적절한 기준이 들어가야 합니다.</p>
+    <div>
+        <img src="./images/galaxy algorithm.jpg" alt="은하 분류 흐름도">
+    </div>
+</div>
+
+<div class="section">
+    <h3>문제:</h3>
+    <p>외부 은하 분류 흐름도의 (가), (나), (다)에 들어갈 기준을 선택하세요.</p>
+</div>
+
+<div class="controls">
+    <label for="timeSelect"><strong>시간 설정:</strong></label>
+    <select id="timeSelect">
+        <option value="30">30초</option>
+        <option value="60">1분</option>
+        <option value="90">1분 30초</option>
+        <option value="120">2분</option>
+    </select>
+    <button onclick="startQuiz()">문제풀이 시작</button>
+</div>
+
+<!-- 퀴즈 영역 -->
+<div id="quizSection">
+    <h3>정답 선택:</h3>
+    <p>(가): 
+        <select id="answerA">
+            <option value="">선택</option>
+            <option>형태가 규칙적인가?</option>
+            <option>나선팔이 있는가?</option>
+            <option>중심부에 막대 구조가 있는가?</option>
+        </select>
+    </p>
+    <p>(나): 
+        <select id="answerB">
+            <option value="">선택</option>
+            <option>형태가 규칙적인가?</option>
+            <option>나선팔이 있는가?</option>
+            <option>중심부에 막대 구조가 있는가?</option>
+        </select>
+    </p>
+    <p>(다): 
+        <select id="answerC">
+            <option value="">선택</option>
+            <option>형태가 규칙적인가?</option>
+            <option>나선팔이 있는가?</option>
+            <option>중심부에 막대 구조가 있는가?</option>
+        </select>
+    </p>
+    <button onclick="checkAnswer()">채점하기</button>
+    <div class="timer" id="timerDisplay">남은 시간: 0초</div>
+</div>
+
+<script>
+    let countdown;
+
+    function startQuiz() {
+        document.getElementById('quizSection').style.display = 'block';
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(countdown);
+        let time = parseInt(document.getElementById('timeSelect').value);
+        document.getElementById('timerDisplay').textContent = `남은 시간: ${time}초`;
+        countdown = setInterval(() => {
+            time--;
+            document.getElementById('timerDisplay').textContent = `남은 시간: ${time}초`;
+            if (time <= 0) {
+                clearInterval(countdown);
+                showPopup("시간이 종료되었습니다!", true);
+            }
+        }, 1000);
+    }
+
+    function checkAnswer() {
+        const ansA = document.getElementById('answerA').value.trim();
+        const ansB = document.getElementById('answerB').value.trim();
+        const ansC = document.getElementById('answerC').value.trim();
+
+        const correctA = "형태가 규칙적인가?";
+        const correctB = "나선팔이 있는가?";
+        const correctC = "중심부에 막대 구조가 있는가?";
+
+        if (ansA === correctA && ansB === correctB && ansC === correctC) {
+            showPopup("맞았습니다! 정답입니다!", false);
+        } else {
+            showPopup("틀렸습니다! 다시 도전하세요!", true);
+        }
+    }
+
+    function showPopup(message, retry) {
+        let popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '0';
+        popup.style.left = '0';
+        popup.style.width = '100%';
+        popup.style.height = '100%';
+        popup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        popup.style.display = 'flex';
+        popup.style.flexDirection = 'column';
+        popup.style.justifyContent = 'center';
+        popup.style.alignItems = 'center';
+        popup.style.color = '#fff';
+        popup.style.fontSize = '24px';
+        popup.style.zIndex = '9999';
+
+        let msg = document.createElement('div');
+        msg.textContent = message;
+        popup.appendChild(msg);
+
+        let button = document.createElement('button');
+        button.style.marginTop = '20px';
+        button.textContent = retry ? "다시 도전" : "닫기";
+        button.onclick = function() {
+            document.body.removeChild(popup);
+            if (retry) resetQuiz();
+        };
+        popup.appendChild(button);
+
+        document.body.appendChild(popup);
+    }
+
+    function resetQuiz() {
+        document.getElementById('answerA').value = '';
+        document.getElementById('answerB').value = '';
+        document.getElementById('answerC').value = '';
+        document.getElementById('timerDisplay').textContent = '남은 시간: 0초';
+    }
+</script>
+
+</body>
+</html>
